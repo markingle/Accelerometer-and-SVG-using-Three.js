@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="utf-8" />
+<title>WebsocketTest</title>
+<meta name="viewport" content="width=device-width">
+
+</head>
+
+<style>
+
+@viewport {
+    width: device-width;
+    height: device-height;
+}
+#container {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    display: block;
+    padding: 25px;
+    background: -webkit-linear-gradient(90deg, #383838, black, white);
+    overflow: hidden;
+}
+#ball {
+    margin: auto 0;
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(230, 126, 34, 1.0);
+    position: absolute;
+    bottom: 0px;
+    left: 45%;
+    top: 50%;
+    box-shadow : 0px 0px 2px 1px #000000;
+    overflow: hidden;
+}
+#shiny{
+    position: absolute;
+    height: 1px;
+    width: 1px;
+    top: 30%;
+    left: 55%;    
+    border: 2px solid #eeeeee;
+    border-radius: 100%;
+    box-shadow: 0px 0px 10px 10px #eeeeee;
+    background-color: #eeeeee;
+}
+
+.dropover {
+    display: none;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-size: 25vw;
+    -webkit-transform:scale(1,2);
+    color: white;
+}
+</style>
+    
+<link href='http://fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
+<div id="container"> 
+    <span id="ball">
+        <span id="shiny"></span>
+    </span>
+    <h1 class='dropover'>RESET</h1>
+</div>
+    
+<script src="three.js"></script>
+<script type="text/javascript">
+var g1;
+var Analog0 = new Array(); //create the arrays for the analog readings here.
+
+    
+var connection = new WebSocket('ws://'+location.hostname+':81/', ['echo-protocol']);
+connection.onopen = function () { connection.send('GET_TEMP'); }; 
+console.log("connection opened");
+connection.onerror = function (error) { console.log('WebSocket Error ', error); };
+
+connection.onmessage = function(evt) {
+    // handle websocket message. update attributes or values of elements that match the name on incoming message
+    console.log("msg rec", evt.data);
+    var msgArray = evt.data.split(","); //split message by delimiter into a string array
+    console.log("msgArray", msgArray[0]);
+    console.log("msgArray", msgArray[1]);
+    console.log("msgArray", msgArray[2]);
+    console.log("msgArray", msgArray[3]);
+    var indicator = msgArray[0]; //the first element in the message array is the ID of the object to update
+    console.log("indiactor", indicator);
+    if (indicator) //if an object by the name of the message exists, update its value or its attributes
+        {
+            switch(msgArray[0]){
+
+            case "Temp":
+                    console.log("Temperature Data Sent");
+                    var A0 = (msgArray[1]);
+                    g1.refresh(A0, null);
+
+                    var x = Analog0.length;
+                    if (x < 101)
+                        {
+                            Analog0[x] = A0;
+                        }
+                    else
+                        {
+                            Analog0.shift();
+                            x = Analog0.length;
+                            Analog0[x] = A0;
+                        }
+
+                    break;
+            
+            case "Accel":
+                    console.log("Accellerometer Data Sent");
+                    var A0 = (msgArray[1]);
+                    var A1 = (msgArray[2]);
+                    var A2 = (msgArray[3]);
+                    g1.refresh(A0, null);
+
+                    var x = Analog0.length;
+                    if (x < 101)
+                        {
+                            Analog0[x] = A0;
+                        }
+                    else
+                        {
+                            Analog0.shift();
+                            x = Analog0.length;
+                            Analog0[x] = A0;
+                        }
+
+                    break;
+
+            default:
+                    //unrecognized message type. do nothing
+                    break;
+                    
+                    
+            case "Conn Ack!":
+                    console.log("Connection Established!!!");
+                    break;
+
+            }
+        }
+};
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+{
+  "project": {
+    "projectSettingsVersion": "3.0.0",
+    "currentBuildConfiguration": null,
+    "projectFiles": {},
+    "projectDirectories": {}
+  },
+  "editorTab": {
+    "currentEditorMode": 0
+  },
+  "iot-tab": {
+    "fileStatus": {
+      "icon.png": {
+        "previousModTime": 1472314530253,
+        "modified": 1472314530253,
+        "seen": true,
+        "name": "icon.png"
+      },
+      "main.js": {
+        "previousModTime": 1472403845418,
+        "modified": 1472403845418,
+        "seen": true,
+        "name": "main.js"
+      },
+      "package.json": {
+        "previousModTime": 1472314530250,
+        "modified": 1472314530250,
+        "seen": true,
+        "name": "package.json"
+      },
+      "README.md": {
+        "previousModTime": 1472314530251,
+        "modified": 1472314530251,
+        "seen": true,
+        "name": "README.md"
+      },
+      "Websocket.xdk": {
+        "previousModTime": 1472314532075,
+        "modified": 1472314532075,
+        "seen": true,
+        "name": "Websocket.xdk"
+      },
+      "Websocket.xdke": {
+        "previousModTime": 1472403852341,
+        "modified": 1472403852341,
+        "seen": true,
+        "name": "Websocket.xdke"
+      },
+      "xdk/project-info.json": {
+        "previousModTime": 1472314531213,
+        "modified": 1472314531213,
+        "seen": true,
+        "name": "xdk/project-info.json"
+      },
+      "index.html": {
+        "previousModTime": 1472345412563,
+        "modified": 1472345412563,
+        "seen": true,
+        "name": "index.html"
+      },
+      "index2.html": {
+        "previousModTime": 1472403895672,
+        "modified": 1472403895672,
+        "seen": true,
+        "name": "index2.html"
+      },
+      "three.js.gz": {
+        "previousModTime": 1472342988000,
+        "modified": 1472342988000,
+        "seen": true,
+        "name": "three.js.gz"
+      }
+    },
+    "boardFileStatus": {
+      "index2.html": {
+        "previousModTime": 1472403896321
+      }
+    }
+  }
+}

@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="utf-8" />
+<title>Accelerometer Example</title>
+<meta name="viewport" content="width=device-width">
+
+</head>
+
+<style>
+
+/*@viewport {
+    width: device-width;
+    height: device-height;
+}*/
+    
+#container {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    display: block;
+    padding: 25px;
+    background: -webkit-linear-gradient(90deg, #383838, black, white);
+    overflow: hidden;
+}
+#ball {
+    margin: auto 0;
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(230, 126, 34, 1.0);
+    position: absolute;
+    bottom: 0px;
+    left: 45%;
+    top: 50%;
+    box-shadow : 0px 0px 2px 1px #000000;
+    overflow: hidden;
+}
+#shiny{
+    position: absolute;
+    height: 1px;
+    width: 1px;
+    top: 30%;
+    left: 55%;    
+    border: 2px solid #eeeeee;
+    border-radius: 100%;
+    box-shadow: 0px 0px 10px 10px #eeeeee;
+    background-color: #eeeeee;
+}
+
+.dropover {
+    display: none;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-size: 25vw;
+    -webkit-transform:scale(1,2);
+    color: white;
+}
+</style>
+    
+<link href='http://fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
+<div id="container"> 
+    <span id="ball">
+        <span id="shiny"></span>
+    </span>
+    <h1 class='dropover'>RESET</h1>
+</div>
+    
+<script src="three.js"></script>
+<script type="text/javascript">
+var Ball = {
+    x: 50,
+    y: 50,
+    size: 100,
+    lumin: 1.0,
+    diffusion: 10,
+    highlight: 10,
+    shineOpacity: 1.0,
+    init: function(){
+        this.x = 0;
+        this.y = 0;
+        this.size = 50;
+        this.lumin = 1.0;
+        this.shineOpacity = 1.0;
+        this.diffusion = 10;
+        this.highlight = 10;
+        document.getElementById("ball").style.display = "none";
+        document.getElementById("ball").style.marginLeft = "auto 0";
+        document.getElementById("ball").style.bottom = "0 px";
+        document.getElementById("ball").style.left = "45%";
+        document.getElementById("ball").style.top = "50%";
+        document.getElementById("ball").style.top = "50%";
+        
+    }      
+};
+
+
+//window.addEventListener('click', function (event) 
+document.addEventListener("DOMContentLoaded", function(event) {
+console.log("DOM fully loaded and parsed");
+//g1 = new JustGage({
+//id: "g1", 
+    
+var connection = new WebSocket('ws://'+location.hostname+':81/', ['echo-protocol']);
+connection.onopen = function () { connection.send('GET_TEMP'); }; 
+console.log("connection opened");
+connection.onerror = function (error) { console.log('WebSocket Error ', error); };
+
+connection.onmessage = function(evt) {
+    // handle websocket message. update attributes or values of elements that match the name on incoming message
+    console.log("msg rec", evt.data);
+    var msgArray = evt.data.split(","); //split message by delimiter into a string array
+    console.log("msgArray", msgArray[0]);
+    console.log("msgArray", msgArray[1]);
+    console.log("msgArray", msgArray[2]);
+    console.log("msgArray", msgArray[3]);
+    var alpha = Number(msgArray[1]);
+    var beta = Number(msgArray[2]);
+    var gamma = Number(msgArray[3])
+    var indicator = msgArray[0]; //the first element in the message array is the ID of the object to update
+    console.log("indiactor", indicator);
+    Ball.x += alpha;
+    Ball.y -= beta;
+    Ball.size += (beta * 0.075);
+    Ball.lumin += (beta * .002);
+    Ball.diffusion += (beta * .05);
+    Ball.highlight += (beta * .07);
+    Ball.shineOpacity += (beta * .01);
+    document.getElementById("ball").style.marginLeft = Ball.x + "px";
+    document.getElementById("ball").style.bottom = Ball.y + "px";
+    document.getElementById("ball").style.width = Ball.size + "px";
+    document.getElementById("ball").style.height = Ball.size + "px";
+    document.getElementById("ball").style.backgroundColor = "rgba(230, 126, 34," + (Ball.lumin) + ")";
+    document.getElementById("shiny").style.boxShadow = "0px 0px "+Ball.diffusion+"px "+Ball.highlight+"px #eeeeee";
+    document.getElementById("shiny").style.opacity = Ball.shineOpacity;
+    Ball.size < 2 ? document.getElementById("ball").style.display = "none" : document.getElementById("ball").style.display = "block";
+}
+});
+
+
+$(document).ready(function () { 
+    $('*').click(function(){
+        $('.dropover').fadeIn('slow', function(){
+            $('.dropover').fadeOut('slow', function(){
+                 Ball.init();
+                 $('#ball').fadeIn('slow');
+            });
+        });
+    });
+    
+    //for iOS
+    $('*').bind( "touchstart", function(){
+      $('.dropover').fadeIn('slow', function(){
+            $('.dropover').fadeOut('slow', function(){
+                 Ball.init();
+                 $('#ball').fadeIn('slow');
+            });
+        });
+    });
+});
+
+</script>
+</body>
+
+</html>
